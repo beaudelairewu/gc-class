@@ -16,20 +16,30 @@ import RegisterScreen from './screens/sessions/RegisterScreen';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+// LogBox.ignoreLogs(['Setting a timer for a long period of time']);
 
 export default function App() {
   const [signedIn, setSignedIn] = useState(false);
+
   auth.onAuthStateChanged((user) => {
     if (user) {
       setSignedIn(true);
     } else {
-      setSignedIn(false); 
+      setSignedIn(false);
     }
   });
+
+  const forFade = ({ current }) => ({
+    cardStyle: {
+      opacity: current.progress,
+      backgroundColor: 'transparent',
+    },
+  });
+
   return (
-    <NavigationContainer theme={DefaultTheme}>
-      {signedIn
-        ? (
+      <NavigationContainer theme={DefaultTheme}>
+        {signedIn
+          ? (
             <SafeAreaView style={{flex: 1, backgroundColor: '#29434e'}}>
               <Tab.Navigator
                 screenOptions={({ route }) => ({
@@ -79,40 +89,42 @@ export default function App() {
               </Tab.Navigator>
             </SafeAreaView>
           ) : (
-          <>
-            <StatusBar style="light" />
-            <Stack.Navigator
+            <>
+              <StatusBar style="light" />
+              <Stack.Navigator
               mode="card"
               screenOptions={{
               }}
-            >
-              <Stack.Screen
-                name="signIn"
-                component={LoginScreen}
-                options={{
-                  title: 'Sign in',
-                  headerStyle: {
-                    backgroundColor: '#29434e',
-                    borderBottomColor: '#29434e',
-                  },
-                  headerTintColor: '#fff',
-                }}
-              />
-              <Stack.Screen
-                name="register"
-                component={RegisterScreen}
-                options={{
-                  title: 'Register',
-                  headerStyle: {
-                    backgroundColor: '#29434e',
-                    borderBottomColor: '#29434e',
-                  },
-                  headerTintColor: '#fff',
-                }}
-              />
-            </Stack.Navigator>
-          </>
-        )}
-    </NavigationContainer>
+              >
+                <Stack.Screen
+                  name="signIn"
+                  component={LoginScreen}
+                  options={{
+                    title: 'Sign in',
+                    headerStyle: {
+                      backgroundColor: '#29434e',
+                      borderBottomColor: '#29434e',
+                    },
+                    cardStyleInterpolator: forFade,
+                    headerTintColor: '#fff',
+                  }}
+                />
+                <Stack.Screen
+                  name="register"
+                  component={RegisterScreen}
+                  options={{
+                    title: 'Register',
+                    headerStyle: {
+                      backgroundColor: '#29434e',
+                      borderBottomColor: '#29434e',
+                    },
+                    cardStyleInterpolator: forFade,
+                    headerTintColor: '#fff',
+                  }}
+                />
+              </Stack.Navigator>
+            </>
+          )}
+      </NavigationContainer>
   );
 }
